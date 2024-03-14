@@ -132,7 +132,7 @@ Refactorizar y extender el sistema de gestión de biblioteca existente, introduc
      - Consultar el historial de préstamos de un usuario específico.
 4. **Integración y Visibilidad**:
    - Asegurar que el uso de modificadores de acceso esté correctamente implementado en todas las clases para controlar la visibilidad de las propiedades y métodos.
-   - Integrar las clases `**Usuario**` y **`RegistroPrestamos`** con **`GestorBiblioteca`** para mantener un registro detallado de los préstamos y devoluciones y poder consultar el historial de prestamos.
+   - Integrar las clases `**Usuario**` y **`RegistroPrestamos`** con **`GestorBiblioteca`** para mantener un registro detallado de los préstamos y devoluciones y poder consultar el historial de préstamos.
 
 **Programa Principal**:
 
