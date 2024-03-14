@@ -19,18 +19,19 @@ class UtilidadesBiblioteca{
  **/
 class GestorBiblioteca {
     //Lista que se encarga de almacenar los libros
-    private val catalogo: MutableMap<UUID,Libro> = mutableMapOf()
+    private val catalogo: MutableList<Libro> = mutableListOf()
     //Lista que se encarga de almacenar los Préstamos
     private val registroPrestamos: MutableList<Prestamo> = mutableListOf()
 
     //Agregar un libro al catálogo a partir del id.
     fun agregarLibro(libro: Libro) {
-        catalogo[UtilidadesBiblioteca.generarIdentificadorUnico()]=libro
+        libro.id = UtilidadesBiblioteca.generarIdentificadorUnico()
+        catalogo.add(libro)
     }
 
     //Eliminar un libro del catálogo.
-    fun eliminarLibro(id: UUID) {
-        catalogo.remove(id)
+    fun eliminarLibro(libro: Libro) {
+        catalogo.remove(libro)
     }
 
     //Registrar un préstamo (cambia el estado del libro a prestado si está disponible).
@@ -75,12 +76,12 @@ class GestorBiblioteca {
 
                 }
                 "2" -> {
-                    catalogo.forEach { if( it.value.estado == EstadoLibro.DISPONIBLE )println(it) }
+                    catalogo.forEach { if( it.estado == EstadoLibro.DISPONIBLE )println(it) }
                     verificar = true
 
                 }
                 "3" -> {
-                    catalogo.forEach { if(it.value.estado == EstadoLibro.PRESTADO)println(it) }
+                    catalogo.forEach { if(it.estado == EstadoLibro.PRESTADO)println(it) }
                     verificar = true
 
                 }
@@ -115,7 +116,7 @@ enum class EstadoLibro{DISPONIBLE,PRESTADO}
 
  */
 data class Libro(
-    val id: Int,
+    var id: UUID,
     val titulo: String,
     val autor: String,
     val anioPublicacion: Int,
@@ -143,7 +144,7 @@ data class Usuario(
  * @property libro Libro que se quiere gestionar.
  * @property usuario Usuario que quiere realizar una accion.
  */
-fun menuUsuario(biblioteca: GestorBiblioteca,libro: Libro,usuario: Usuario,id: UUID){
+fun menuUsuario(biblioteca: GestorBiblioteca,libro: Libro,usuario: Usuario){
     println("Que quieres hacer:\n1.Agregar un libro\n2.Eliminar un libro\n3.Prestar un libro\n4.Devolver un libro\n5.Comprobar la disponibilidad\n6.Consultar el catalogo")
     val option = readln()
     var verificar = false
@@ -156,7 +157,7 @@ fun menuUsuario(biblioteca: GestorBiblioteca,libro: Libro,usuario: Usuario,id: U
             }
 
             "2" -> {
-                biblioteca.eliminarLibro(id)
+                biblioteca.eliminarLibro(libro)
                 verificar = true
 
             }
@@ -193,16 +194,17 @@ fun main() {
     //Instaciamos el gestor de biblioteca
     val gestorBiblioteca = GestorBiblioteca()
     //Instaciamos 3 libros
-    val libro1 = Libro(12, "Cien años de soledad",  "Gabriel García Márquez",  1967,  "Realismo mágico")
-    val libro2 = Libro( 11,"1984",  "George Orwell",  1949,  "Ciencia ficción")
-    val libro3 = Libro(10,"El principito",  "Antoine de Saint-Exupéry",  1943,  "Literatura infantil")
-    //Instanciamos un id
-    val id:UUID = UtilidadesBiblioteca.generarIdentificadorUnico()
-
+    val libro1 = Libro(UtilidadesBiblioteca.generarIdentificadorUnico(), "Cien años de soledad",  "Gabriel García Márquez",  1967,  "Realismo mágico")
+    val libro2 = Libro( UtilidadesBiblioteca.generarIdentificadorUnico(),"1984",  "George Orwell",  1949,  "Ciencia ficción")
+    val libro3 = Libro(UtilidadesBiblioteca.generarIdentificadorUnico(),"El principito",  "Antoine de Saint-Exupéry",  1943,  "Literatura infantil")
+    println(libro3.id)
     //Agregamos al catálogo los 3 libros
     gestorBiblioteca.agregarLibro(libro1)
     gestorBiblioteca.agregarLibro(libro2)
     gestorBiblioteca.agregarLibro(libro3)
+    println(libro3.id)
+
+
     //Instaciamos los 2 usuarios
     val usuario1 = Usuario( 1,"Juan")
     val usuario2 = Usuario(2,  "María")
@@ -217,5 +219,5 @@ fun main() {
     gestorBiblioteca.consultarDisponibilidad(libro2)
     gestorBiblioteca.consultarDisponibilidad(libro3)
     //Mostramos el menu con un libro y un usuario
-    menuUsuario(gestorBiblioteca,libro3,usuario1,id)
+    menuUsuario(gestorBiblioteca,libro3,usuario1)
 }
